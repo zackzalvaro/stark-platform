@@ -217,8 +217,10 @@
             background-image: url('https://github.com/zackzalvaro/stark-platform/blob/eae28a704011d8f759fe122f4ea3172c0fb13900/images/homets.png');
             background-repeat: no-repeat;
             background-position: center bottom;
-            background-size: 90%;
+            background-size: 90% auto;
             opacity: 0.5;
+            filter: grayscale(100%);
+            z-index: 5;
         }
         
         /* Analysis Header */
@@ -615,9 +617,8 @@
         <!-- Immersive Background -->
         <div class="analysis-background">
             <div class="gradient-glow"></div>
-            <div class="aircraft-visual"></div>
         </div>
-        
+        <div class="aircraft-visual"></div>
         <!-- Header -->
         <div class="analysis-header">
             <div class="header-content">
