@@ -210,20 +210,10 @@
         
         /* Aircraft Background Image */
         .aircraft-visual {    
-            position: fixed;  /* Changed from absolute */
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 400px;
-            background-image: url('https://zackzalvaro.github.io/stark-platform/images/homets.png');
-            background-repeat: no-repeat;
-            background-position: center bottom;
-            background-size: contain;  /* Changed from 90% auto */
-            opacity: 1;  /* Full opacity */
-            background: red;
-    /* filter: grayscale(100%); */  /* Commented out */
-            z-index: 9999;  /* Very high z-index */
-            border: 5px solid red;  /* Add red border to see if element exists */
+            opacity: 1 !important;        /* Full opacity */
+            filter: none !important;      /* Remove grayscale */
+            background-color: red;        /* Add red background */
+            z-index: 9999 !important;     /* Bring to front */
         }
         
         /* Analysis Header */
