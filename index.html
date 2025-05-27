@@ -194,6 +194,7 @@
                 transparent 80%);
             animation: glowPulse 10s ease-in-out infinite;
             filter: blur(40px);
+            z-index: 1;
         }
         
         @keyframes glowPulse {
@@ -220,7 +221,7 @@
             background-size: 90% auto;
             opacity: 0.5;
             filter: grayscale(100%);
-            z-index: 5;
+            z-index: 2;
         }
         
         /* Analysis Header */
@@ -617,8 +618,9 @@
         <!-- Immersive Background -->
         <div class="analysis-background">
             <div class="gradient-glow"></div>
+            <div class="aircraft-visual"></div>
         </div>
-        <div class="aircraft-visual"></div>
+        
         <!-- Header -->
         <div class="analysis-header">
             <div class="header-content">
