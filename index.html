@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STARK Platform</title>
+    <title>Vibe-Core: Hybrid Aircraft Analysis Platform</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
@@ -14,7 +14,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #ffffff;
+            background: #f0f2f5;
             color: #1a1a1a;
             min-height: 100vh;
             overflow-x: hidden;
@@ -165,60 +165,7 @@
             display: none;
             min-height: 100vh;
             position: relative;
-        }
-        
-        /* Immersive Background with Aircraft */
-        .analysis-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: #ffffff;
-            overflow: hidden;
-            z-index: 0;
-        }
-        
-        /* Green Gradient Glow */
-        .gradient-glow {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: radial-gradient(ellipse at 50% 50%, 
-                rgba(0, 255, 136, 0.2) 0%, 
-                rgba(0, 216, 98, 0.15) 20%, 
-                rgba(0, 255, 136, 0.1) 40%, 
-                rgba(0, 212, 255, 0.05) 60%, 
-                transparent 80%);
-            animation: glowPulse 10s ease-in-out infinite;
-            filter: blur(40px);
-            z-index: 1;
-        }
-        
-        @keyframes glowPulse {
-            0%, 100% { 
-                transform: scale(1) rotate(0deg); 
-                opacity: 0.6; 
-            }
-            50% { 
-                transform: scale(1.2) rotate(10deg); 
-                opacity: 1; 
-            }
-        }
-        
-        /* Aircraft Background Image */
-        .aircraft-visual {    
-            opacity: 1 !important;        /* Full opacity */
-            filter: none !important;      /* Remove grayscale */
-            z-index: 9999 !important;     /* Bring to front */
-            position: fixed;  /* Change from absolute to fixed */
-            bottom: 0;        /* Keep bottom: 0 */
-            left: 0;
-            width: 100%;
-            height: 400px;    /* Fixed height instead of 50% */
-            background-image: url('https://zackzalvaro.github.io/stark-platform/images/homets.png') !important; }
+            background: #f5f7fa;
         }
         
         /* Analysis Header */
@@ -264,47 +211,93 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* HUD Container */
-        .hud-container {
+        /* Main Showcase Container */
+        .showcase-container {
             position: relative;
+            max-width: 1400px;
+            margin: 2rem auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+        
+        /* Aircraft Display Section */
+        .aircraft-display {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            background: linear-gradient(to bottom, 
+                rgba(245, 247, 250, 1) 0%, 
+                rgba(255, 255, 255, 0.95) 30%, 
+                rgba(255, 255, 255, 1) 100%);
+        }
+        
+        /* Green Gradient Overlay */
+        .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 50% 30%, 
+                rgba(0, 255, 136, 0.08) 0%, 
+                rgba(0, 216, 98, 0.05) 30%, 
+                transparent 60%);
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        /* Aircraft Visual */
+        .aircraft-visual {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+            width: 85%;
+            height: 500px;
+            background-image: url('https://zackzalvaro.github.io/stark-platform/images/homets.png');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain;
+            opacity: 0.9;
+            z-index: 3;
+        }
+        
+        /* Chart Overlay */
+        .chart-overlay {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 900px;
             z-index: 10;
-            padding: 2rem;
-            max-width: 1600px;
-            margin: 0 auto;
         }
         
-        /* Main Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        /* Chart Section */
-        .chart-section {
-            width: 100%;
-        }
-        
-        /* Horizontal Cards Container */
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        /* Cards Container at Bottom */
+        .cards-overlay {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            display: flex;
             gap: 1.5rem;
-            width: 100%;
+            z-index: 10;
         }
         
-        /* Glassmorphic Cards */
+        /* Glassmorphic Card Styles */
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
-                        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+                        inset 0 2px 2px rgba(255, 255, 255, 0.9);
             padding: 1.5rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
@@ -321,19 +314,22 @@
         }
         
         .glass-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12),
-                        0 0 0 1px rgba(0, 216, 98, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
         }
         
         .chart-card {
-            grid-column: 1 / -1;
-            height: 400px;
+            height: 250px;
             position: relative;
         }
         
+        .data-card {
+            flex: 1;
+            min-width: 280px;
+        }
+        
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 1rem;
@@ -360,7 +356,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 0;
+            padding: 0.6rem 0;
             border-bottom: 1px solid rgba(0, 216, 98, 0.1);
         }
         
@@ -370,26 +366,22 @@
         
         .stat-label {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         
         .stat-value {
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             background: linear-gradient(135deg, #00d862, #00b956);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        .stat-value.warning {
-            background: linear-gradient(135deg, #ff6b6b, #ff5252);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Input Controls Panel */
-        .controls-panel {
-            margin-top: 2rem;
+        /* Controls Section */
+        .controls-section {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
         
         .controls-grid {
@@ -399,7 +391,7 @@
         }
         
         .control-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 16px;
             padding: 1.5rem;
@@ -500,19 +492,14 @@
         /* Status Badge */
         .status-badge {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            padding: 0.5rem 1.5rem;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 1rem;
             border-radius: 100px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
-            animation: statusPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes statusPulse {
-            0%, 100% { opacity: 0.9; }
-            50% { opacity: 1; }
+            z-index: 10;
         }
         
         .status-badge.feasible {
@@ -549,9 +536,13 @@
         }
         
         /* Responsive */
-        @media (max-width: 1400px) {
-            .cards-container {
-                grid-template-columns: repeat(2, 1fr);
+        @media (max-width: 1200px) {
+            .cards-overlay {
+                flex-wrap: wrap;
+            }
+            
+            .data-card {
+                min-width: calc(50% - 0.75rem);
             }
             
             .controls-grid {
@@ -560,21 +551,26 @@
         }
         
         @media (max-width: 768px) {
-            .hud-container {
-                padding: 1rem;
+            .aircraft-display {
+                height: 600px;
             }
             
-            .cards-container {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+            .aircraft-visual {
+                width: 95%;
+                height: 400px;
+            }
+            
+            .cards-overlay {
+                flex-direction: column;
+                width: 85%;
+            }
+            
+            .data-card {
+                min-width: 100%;
             }
             
             .controls-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .glass-card {
-                padding: 1rem;
             }
         }
     </style>
@@ -584,7 +580,7 @@
     <nav class="nav">
         <a href="#" class="nav-brand" onclick="showDashboard()">
             <span style="font-size: 2rem;">✈️</span>
-            Stark
+            Vibe-Core
         </a>
         <div class="nav-actions">
             <button class="create-btn" onclick="createNewAircraft()" id="nav-create-btn">Create</button>
@@ -612,27 +608,27 @@
     
     <!-- Analysis Page -->
     <div id="analysis-page" class="analysis-page">
-        <!-- Immersive Background -->
-        <div class="analysis-background">
-            <div class="gradient-glow"></div>
-            <div class="aircraft-visual"></div>
-        </div>
-        
         <!-- Header -->
         <div class="analysis-header">
             <div class="header-content">
                 <button class="back-btn" onclick="showDashboard()">← Back to Home</button>
-                <h1 class="analysis-title">Stark Platform</h1>
+                <h1 class="analysis-title">Vibe-Core Analysis</h1>
                 <input type="text" class="aircraft-name-input" id="aircraft-name" placeholder="Aircraft Model Name" value="Aircraft 1" style="max-width: 200px;">
             </div>
         </div>
         
-        <!-- HUD Container -->
-        <div class="hud-container">
-            <!-- Main Dashboard Grid -->
-            <div class="dashboard-grid">
-                <!-- Chart Section -->
-                <div class="chart-section">
+        <!-- Main Showcase Container -->
+        <div class="showcase-container">
+            <!-- Aircraft Display Section -->
+            <div class="aircraft-display">
+                <!-- Green Gradient Overlay -->
+                <div class="gradient-overlay"></div>
+                
+                <!-- Aircraft Visual -->
+                <div class="aircraft-visual"></div>
+                
+                <!-- Chart Overlay -->
+                <div class="chart-overlay">
                     <div class="glass-card chart-card">
                         <h3 class="card-title">
                             <span class="card-icon">📊</span>
@@ -643,10 +639,10 @@
                     </div>
                 </div>
                 
-                <!-- Horizontal Cards Container -->
-                <div class="cards-container">
+                <!-- Data Cards Overlay -->
+                <div class="cards-overlay">
                     <!-- Energy Requirements Card -->
-                    <div class="glass-card">
+                    <div class="glass-card data-card">
                         <h3 class="card-title">
                             <span class="card-icon">⚡</span>
                             Energy Requirements
@@ -666,7 +662,7 @@
                     </div>
                     
                     <!-- Mass Budget Card -->
-                    <div class="glass-card">
+                    <div class="glass-card data-card">
                         <h3 class="card-title">
                             <span class="card-icon">⚖️</span>
                             Mass Budget
@@ -690,7 +686,7 @@
                     </div>
                     
                     <!-- Performance Metrics Card -->
-                    <div class="glass-card">
+                    <div class="glass-card data-card">
                         <h3 class="card-title">
                             <span class="card-icon">📈</span>
                             Performance Metrics
@@ -714,86 +710,86 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Controls Panel -->
-            <div class="controls-panel">
-                <div class="controls-grid">
-                    <!-- Mission Parameters -->
-                    <div class="control-card">
-                        <h4 class="category-header">Mission Parameters</h4>
-                        <div class="control-group">
-                            <label>
-                                Seats
-                                <span class="value-display" id="seats-value">30</span>
-                            </label>
-                            <input type="range" id="seats" min="10" max="50" value="30" step="1">
-                        </div>
-                        <div class="control-group">
-                            <label>
-                                Range (km)
-                                <span class="value-display" id="range-value">1000</span>
-                            </label>
-                            <input type="range" id="range" min="500" max="2000" value="1000" step="50">
-                        </div>
-                        <div class="control-group">
-                            <label>
-                                Cruise Alt (km)
-                                <span class="value-display" id="altitude-value">18.0</span>
-                            </label>
-                            <input type="range" id="altitude" min="10" max="20" value="18" step="0.5">
-                        </div>
+        </div>
+        
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="controls-grid">
+                <!-- Mission Parameters -->
+                <div class="control-card">
+                    <h4 class="category-header">Mission Parameters</h4>
+                    <div class="control-group">
+                        <label>
+                            Seats
+                            <span class="value-display" id="seats-value">30</span>
+                        </label>
+                        <input type="range" id="seats" min="10" max="50" value="30" step="1">
                     </div>
-                    
-                    <!-- Battery Specifications -->
-                    <div class="control-card">
-                        <h4 class="category-header">Battery Specs</h4>
-                        <div class="control-group">
-                            <label>
-                                Energy (Wh/kg)
-                                <span class="value-display" id="battery-density-value">600</span>
-                            </label>
-                            <input type="range" id="battery-density" min="400" max="800" value="600" step="20">
-                        </div>
-                        <div class="control-group">
-                            <label>
-                                Power (W/kg)
-                                <span class="value-display" id="battery-power-value">1500</span>
-                            </label>
-                            <input type="range" id="battery-power" min="1000" max="3000" value="1500" step="100">
-                        </div>
-                        <div class="control-group">
-                            <label>
-                                Battery Share (%)
-                                <span class="value-display" id="battery-share-value">70</span>
-                            </label>
-                            <input type="range" id="battery-share" min="50" max="90" value="70" step="5">
-                        </div>
+                    <div class="control-group">
+                        <label>
+                            Range (km)
+                            <span class="value-display" id="range-value">1000</span>
+                        </label>
+                        <input type="range" id="range" min="500" max="2000" value="1000" step="50">
                     </div>
-                    
-                    <!-- Aircraft Parameters -->
-                    <div class="control-card">
-                        <h4 class="category-header">Aircraft Params</h4>
-                        <div class="control-group">
-                            <label>
-                                L/D Ratio
-                                <span class="value-display" id="ld-ratio-value">18</span>
-                            </label>
-                            <input type="range" id="ld-ratio" min="15" max="22" value="18" step="0.5">
-                        </div>
-                        <div class="control-group">
-                            <label>
-                                Turbine Eff (%)
-                                <span class="value-display" id="turbine-eff-value">38</span>
-                            </label>
-                            <input type="range" id="turbine-eff" min="30" max="45" value="38" step="1">
-                        </div>
+                    <div class="control-group">
+                        <label>
+                            Cruise Alt (km)
+                            <span class="value-display" id="altitude-value">18.0</span>
+                        </label>
+                        <input type="range" id="altitude" min="10" max="20" value="18" step="0.5">
                     </div>
-                    
-                    <!-- Save Button -->
-                    <div class="control-card">
-                        <h4 class="category-header">Actions</h4>
-                        <button class="save-config-btn" onclick="saveCurrentConfiguration()">Save Configuration</button>
+                </div>
+                
+                <!-- Battery Specifications -->
+                <div class="control-card">
+                    <h4 class="category-header">Battery Specs</h4>
+                    <div class="control-group">
+                        <label>
+                            Energy (Wh/kg)
+                            <span class="value-display" id="battery-density-value">600</span>
+                        </label>
+                        <input type="range" id="battery-density" min="400" max="800" value="600" step="20">
                     </div>
+                    <div class="control-group">
+                        <label>
+                            Power (W/kg)
+                            <span class="value-display" id="battery-power-value">1500</span>
+                        </label>
+                        <input type="range" id="battery-power" min="1000" max="3000" value="1500" step="100">
+                    </div>
+                    <div class="control-group">
+                        <label>
+                            Battery Share (%)
+                            <span class="value-display" id="battery-share-value">70</span>
+                        </label>
+                        <input type="range" id="battery-share" min="50" max="90" value="70" step="5">
+                    </div>
+                </div>
+                
+                <!-- Aircraft Parameters -->
+                <div class="control-card">
+                    <h4 class="category-header">Aircraft Params</h4>
+                    <div class="control-group">
+                        <label>
+                            L/D Ratio
+                            <span class="value-display" id="ld-ratio-value">18</span>
+                        </label>
+                        <input type="range" id="ld-ratio" min="15" max="22" value="18" step="0.5">
+                    </div>
+                    <div class="control-group">
+                        <label>
+                            Turbine Eff (%)
+                            <span class="value-display" id="turbine-eff-value">38</span>
+                        </label>
+                        <input type="range" id="turbine-eff" min="30" max="45" value="38" step="1">
+                    </div>
+                </div>
+                
+                <!-- Save Button -->
+                <div class="control-card">
+                    <h4 class="category-header">Actions</h4>
+                    <button class="save-config-btn" onclick="saveCurrentConfiguration()">Save Configuration</button>
                 </div>
             </div>
         </div>
@@ -985,12 +981,12 @@
                             borderColor: '#00d862',
                             backgroundColor: 'rgba(0, 216, 98, 0.1)',
                             tension: 0.4,
-                            pointRadius: 5,
-                            pointHoverRadius: 7,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
                             pointBackgroundColor: '#00d862',
                             pointBorderColor: '#fff',
                             pointBorderWidth: 2,
-                            borderWidth: 3
+                            borderWidth: 2
                         },
                         {
                             label: 'Battery Mass',
@@ -998,12 +994,12 @@
                             borderColor: '#00d4ff',
                             backgroundColor: 'rgba(0, 212, 255, 0.1)',
                             tension: 0.4,
-                            pointRadius: 5,
-                            pointHoverRadius: 7,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
                             pointBackgroundColor: '#00d4ff',
                             pointBorderColor: '#fff',
                             pointBorderWidth: 2,
-                            borderWidth: 3
+                            borderWidth: 2
                         },
                         {
                             label: 'Fuel Mass',
@@ -1011,12 +1007,12 @@
                             borderColor: '#ff6b6b',
                             backgroundColor: 'rgba(255, 107, 107, 0.1)',
                             tension: 0.4,
-                            pointRadius: 5,
-                            pointHoverRadius: 7,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
                             pointBackgroundColor: '#ff6b6b',
                             pointBorderColor: '#fff',
                             pointBorderWidth: 2,
-                            borderWidth: 3
+                            borderWidth: 2
                         }
                     ]
                 },
@@ -1028,9 +1024,9 @@
                             position: 'bottom',
                             labels: {
                                 color: '#333',
-                                padding: 15,
+                                padding: 10,
                                 font: {
-                                    size: 12
+                                    size: 11
                                 },
                                 usePointStyle: true
                             }
@@ -1042,7 +1038,7 @@
                             borderColor: 'rgba(0, 216, 98, 0.2)',
                             borderWidth: 1,
                             cornerRadius: 8,
-                            padding: 12,
+                            padding: 10,
                             displayColors: true
                         }
                     },
@@ -1053,12 +1049,15 @@
                                 text: 'Battery Share (%)',
                                 color: '#666',
                                 font: {
-                                    size: 12,
+                                    size: 11,
                                     weight: '500'
                                 }
                             },
                             ticks: {
-                                color: '#666'
+                                color: '#666',
+                                font: {
+                                    size: 10
+                                }
                             },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.05)',
@@ -1071,7 +1070,7 @@
                                 text: 'Mass (kg)',
                                 color: '#666',
                                 font: {
-                                    size: 12,
+                                    size: 11,
                                     weight: '500'
                                 }
                             },
@@ -1079,6 +1078,9 @@
                                 color: '#666',
                                 callback: function(value) {
                                     return value.toLocaleString();
+                                },
+                                font: {
+                                    size: 10
                                 }
                             },
                             grid: {
