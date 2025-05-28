@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe-Core: Hybrid Aircraft Analysis Platform</title>
+    <title>Hybrid Aircraft Analysis Platform</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
@@ -14,7 +14,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f0f2f5;
+            background: #ffffff;
             color: #1a1a1a;
             min-height: 100vh;
             overflow-x: hidden;
@@ -165,7 +165,29 @@
             display: none;
             min-height: 100vh;
             position: relative;
-            background: #f5f7fa;
+            background: #f8f9fa;
+        }
+        
+        /* Green Gradient Overlay */
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(ellipse at 50% 30%, 
+                rgba(0, 255, 136, 0.08) 0%, 
+                rgba(0, 216, 98, 0.05) 20%, 
+                rgba(0, 255, 136, 0.02) 40%, 
+                transparent 70%);
+            animation: glowPulse 10s ease-in-out infinite;
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
         
         /* Analysis Header */
@@ -211,91 +233,176 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* Main Showcase Container */
-        .showcase-container {
+        /* Main Container */
+        .analysis-container {
             position: relative;
-            max-width: 1400px;
-            margin: 2rem auto;
-            background: #ffffff;
-            border-radius: 32px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12);
-            overflow: hidden;
+            z-index: 10;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
         }
         
-        /* Aircraft Display Section */
-        .aircraft-display {
-            position: relative;
-            width: 100%;
-            height: 700px;
-            background: linear-gradient(to bottom, 
-                rgba(245, 247, 250, 1) 0%, 
-                rgba(255, 255, 255, 0.95) 30%, 
-                rgba(255, 255, 255, 1) 100%);
+        /* Top Stats Row */
+        .top-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1rem;
         }
         
-        /* Green Gradient Overlay */
-        .gradient-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Aircraft Visual Section */
+        .aircraft-visual-section {
+            height: 350px;
+            margin: -1rem 0;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .aircraft-visual {
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at 50% 30%, 
-                rgba(0, 255, 136, 0.08) 0%, 
-                rgba(0, 216, 98, 0.05) 30%, 
-                transparent 60%);
-            pointer-events: none;
-            z-index: 2;
-        }
-        
-        /* Aircraft Visual */
-        .aircraft-visual {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -40%);
-            width: 85%;
-            height: 500px;
             background-image: url('https://zackzalvaro.github.io/stark-platform/images/homets.png');
             background-repeat: no-repeat;
             background-position: center center;
-            background-size: contain;
-            opacity: 0.9;
-            z-index: 3;
+            background-size: 75% auto;
+            opacity: 1;
+            filter: grayscale(100%);
         }
         
-        /* Chart Overlay */
-        .chart-overlay {
-            position: absolute;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 900px;
-            z-index: 10;
+        .aircraft-visual:hover {
+            opacity: 0.2;
         }
         
-        /* Cards Container at Bottom */
-        .cards-overlay {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            display: flex;
+        /* Bottom Layout Grid */
+        .bottom-layout-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
             gap: 1.5rem;
-            z-index: 10;
+            margin-top: 0.5rem;
         }
         
-        /* Glassmorphic Card Styles */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.92);
+        /* Left Column - Chart Controls */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        /* Right Column - Chart */
+        .right-column {
+            display: flex;
+        }
+        
+        /* Chart Control Cards */
+        .chart-control-card {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
-                        inset 0 2px 2px rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            height: 215px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .chart-control-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+        }
+        
+        .chart-control-card.active {
+            border-color: rgba(0, 216, 98, 0.5);
+            background: rgba(255, 255, 255, 0.98);
+        }
+        
+        .control-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .control-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #ddd;
+            border-radius: 100px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .toggle-switch.active {
+            background: #00d862;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(24px);
+        }
+        
+        .control-card-metrics {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .control-card-edit {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 216, 98, 0.1);
+            border: 1px solid rgba(0, 216, 98, 0.3);
+            border-radius: 8px;
+            color: #00b956;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .control-card-edit:hover {
+            background: rgba(0, 216, 98, 0.2);
+        }
+        
+        /* Chart Big Card */
+        .chart-big-card {
+            width: 100%;
+            height: 450px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(40px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+        
+        /* Glass Card Styles */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
             padding: 1.5rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -314,22 +421,12 @@
         }
         
         .glass-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
         }
         
-        .chart-card {
-            height: 250px;
-            position: relative;
-        }
-        
-        .data-card {
-            flex: 1;
-            min-width: 280px;
-        }
-        
         .card-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 1rem;
@@ -339,16 +436,16 @@
         }
         
         .card-icon {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             background: linear-gradient(135deg, #00d862, #00b956);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 16px;
-            box-shadow: 0 2px 8px rgba(0, 216, 98, 0.3);
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(0, 216, 98, 0.3);
         }
         
         /* Stats Display */
@@ -356,7 +453,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.6rem 0;
+            padding: 0.75rem 0;
             border-bottom: 1px solid rgba(0, 216, 98, 0.1);
         }
         
@@ -366,45 +463,93 @@
         
         .stat-label {
             color: #666;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
         
         .stat-value {
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
             background: linear-gradient(135deg, #00d862, #00b956);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        /* Controls Section */
-        .controls-section {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* Popup Modal */
+        .popup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
         }
         
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-        }
-        
-        .control-card {
-            background: rgba(255, 255, 255, 0.95);
+        .popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translate(-50%, -40%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+        
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .popup-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #00d862, #00b956);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        /* Control Styles in Popup */
+        .control-section {
+            margin-bottom: 2rem;
         }
         
         .control-group {
-            margin-bottom: 1.2rem;
-        }
-        
-        .control-group:last-child {
-            margin-bottom: 0;
+            margin-bottom: 1.5rem;
         }
         
         .control-group label {
@@ -414,7 +559,7 @@
             margin-bottom: 0.5rem;
             color: #333;
             font-weight: 500;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
         
         .control-group input[type="range"] {
@@ -447,7 +592,7 @@
         .value-display {
             color: #00b956;
             font-weight: 600;
-            min-width: 50px;
+            min-width: 60px;
             text-align: right;
             font-size: 0.9rem;
         }
@@ -492,12 +637,12 @@
         /* Status Badge */
         .status-badge {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.4rem 1rem;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.75rem 2rem;
             border-radius: 100px;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             z-index: 10;
         }
@@ -505,13 +650,13 @@
         .status-badge.feasible {
             background: rgba(0, 216, 98, 0.1);
             color: #00b956;
-            border: 1px solid rgba(0, 216, 98, 0.3);
+            border: 2px solid rgba(0, 216, 98, 0.3);
         }
         
         .status-badge.infeasible {
             background: rgba(255, 107, 107, 0.1);
             color: #ff5252;
-            border: 1px solid rgba(255, 107, 107, 0.3);
+            border: 2px solid rgba(255, 107, 107, 0.3);
         }
         
         .category-header {
@@ -520,7 +665,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #999;
-            margin-bottom: 1rem;
+            margin: 1.5rem 0 1rem 0;
         }
         
         .empty-state {
@@ -535,42 +680,57 @@
             font-weight: 500;
         }
         
+        /* Name Input in Control Cards */
+        .config-name-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid rgba(0, 216, 98, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .config-name-input:focus {
+            outline: none;
+            border-color: #00d862;
+        }
+        
         /* Responsive */
         @media (max-width: 1200px) {
-            .cards-overlay {
-                flex-wrap: wrap;
+            .bottom-layout-grid {
+                grid-template-columns: 1fr;
             }
             
-            .data-card {
-                min-width: calc(50% - 0.75rem);
+            .left-column {
+                flex-direction: row;
             }
             
-            .controls-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .chart-control-card {
+                height: 180px;
             }
         }
         
         @media (max-width: 768px) {
-            .aircraft-display {
-                height: 600px;
+            .analysis-container {
+                padding: 1rem;
             }
             
-            .aircraft-visual {
-                width: 95%;
-                height: 400px;
-            }
-            
-            .cards-overlay {
-                flex-direction: column;
-                width: 85%;
-            }
-            
-            .data-card {
-                min-width: 100%;
-            }
-            
-            .controls-grid {
+            .top-stats-row {
                 grid-template-columns: 1fr;
+            }
+            
+            .glass-card {
+                padding: 1rem;
+            }
+            
+            .left-column {
+                flex-direction: column;
+            }
+            
+            .aircraft-visual-section {
+                height: 250px;
             }
         }
     </style>
@@ -580,7 +740,7 @@
     <nav class="nav">
         <a href="#" class="nav-brand" onclick="showDashboard()">
             <span style="font-size: 2rem;">✈️</span>
-            Vibe-Core
+            Platform
         </a>
         <div class="nav-actions">
             <button class="create-btn" onclick="createNewAircraft()" id="nav-create-btn">Create</button>
@@ -608,28 +768,140 @@
     
     <!-- Analysis Page -->
     <div id="analysis-page" class="analysis-page">
+        <!-- Green Gradient Overlay -->
+        <div class="gradient-overlay"></div>
+        
         <!-- Header -->
         <div class="analysis-header">
             <div class="header-content">
                 <button class="back-btn" onclick="showDashboard()">← Back to Home</button>
-                <h1 class="analysis-title">Vibe-Core Analysis</h1>
+                <h1 class="analysis-title">Analysis</h1>
                 <input type="text" class="aircraft-name-input" id="aircraft-name" placeholder="Aircraft Model Name" value="Aircraft 1" style="max-width: 200px;">
             </div>
         </div>
         
-        <!-- Main Showcase Container -->
-        <div class="showcase-container">
-            <!-- Aircraft Display Section -->
-            <div class="aircraft-display">
-                <!-- Green Gradient Overlay -->
-                <div class="gradient-overlay"></div>
+        <!-- Main Analysis Container -->
+        <div class="analysis-container">
+            <!-- Top Stats Row -->
+            <div class="top-stats-row">
+                <!-- Energy Requirements Card -->
+                <div class="glass-card">
+                    <h3 class="card-title">
+                        <span class="card-icon">⚡</span>
+                        Energy Requirements
+                    </h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Climb Energy</span>
+                        <span class="stat-value" id="climb-energy">0.40 MWh</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Cruise Energy</span>
+                        <span class="stat-value" id="cruise-energy">0.00 MWh</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Mission Energy</span>
+                        <span class="stat-value" id="total-energy">0.00 MWh</span>
+                    </div>
+                </div>
                 
-                <!-- Aircraft Visual -->
+                <!-- Mass Budget Card -->
+                <div class="glass-card">
+                    <h3 class="card-title">
+                        <span class="card-icon">⚖️</span>
+                        Mass Budget
+                    </h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Battery Mass</span>
+                        <span class="stat-value" id="battery-mass">0 kg</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Fuel Mass</span>
+                        <span class="stat-value" id="fuel-mass">0 kg</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Turbine Mass</span>
+                        <span class="stat-value" id="turbine-mass">0 kg</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Aircraft Mass</span>
+                        <span class="stat-value" id="total-mass">0 kg</span>
+                    </div>
+                </div>
+                
+                <!-- Performance Metrics Card -->
+                <div class="glass-card">
+                    <h3 class="card-title">
+                        <span class="card-icon">📈</span>
+                        Performance Metrics
+                    </h3>
+                    <div class="stat-item">
+                        <span class="stat-label">System Energy Density</span>
+                        <span class="stat-value" id="system-density">0 Wh/kg</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Cost per PKM</span>
+                        <span class="stat-value" id="cost-pkm">$0.000</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">CO₂ per PKM</span>
+                        <span class="stat-value" id="co2-pkm">0 g</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Battery Peak Power</span>
+                        <span class="stat-value" id="battery-peak-power">0 MW</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Aircraft Visual Section -->
+            <div class="aircraft-visual-section" onclick="openPopup('aircraft')">
                 <div class="aircraft-visual"></div>
+            </div>
+            
+            <!-- Bottom Layout Grid -->
+            <div class="bottom-layout-grid">
+                <!-- Left Column - Chart Control Cards -->
+                <div class="left-column">
+                    <!-- First Chart Control -->
+                    <div class="chart-control-card active" id="control-1">
+                        <div class="control-card-header">
+                            <input type="text" class="config-name-input" id="config-name-1" value="Concorde High-Speed" onchange="updateConfigName(1)">
+                            <div class="toggle-switch active" onclick="toggleChartLine(1)">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                        <div class="control-card-metrics">
+                            <div>Battery Share: <span id="share-1">70%</span></div>
+                            <div>Total Mass: <span id="mass-1">25,650 kg</span></div>
+                            <div>System Density: <span id="density-1">480 Wh/kg</span></div>
+                        </div>
+                        <div class="control-card-edit" onclick="openPopupForConfig(1)">
+                            Edit Configuration
+                        </div>
+                    </div>
+                    
+                    <!-- Second Chart Control -->
+                    <div class="chart-control-card" id="control-2">
+                        <div class="control-card-header">
+                            <input type="text" class="config-name-input" id="config-name-2" value="Ampaire" onchange="updateConfigName(2)">
+                            <div class="toggle-switch" onclick="toggleChartLine(2)">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                        <div class="control-card-metrics">
+                            <div>Battery Share: <span id="share-2">60%</span></div>
+                            <div>Total Mass: <span id="mass-2">24,200 kg</span></div>
+                            <div>System Density: <span id="density-2">520 Wh/kg</span></div>
+                        </div>
+                        <div class="control-card-edit" onclick="openPopupForConfig(2)">
+                            Edit Configuration
+                        </div>
+                    </div>
+                </div>
                 
-                <!-- Chart Overlay -->
-                <div class="chart-overlay">
-                    <div class="glass-card chart-card">
+                <!-- Right Column - Chart -->
+                <div class="right-column">
+                    <div class="chart-big-card">
                         <h3 class="card-title">
                             <span class="card-icon">📊</span>
                             Mass vs Battery Share
@@ -638,159 +910,89 @@
                         <div class="status-badge" id="status-badge">CALCULATING...</div>
                     </div>
                 </div>
-                
-                <!-- Data Cards Overlay -->
-                <div class="cards-overlay">
-                    <!-- Energy Requirements Card -->
-                    <div class="glass-card data-card">
-                        <h3 class="card-title">
-                            <span class="card-icon">⚡</span>
-                            Energy Requirements
-                        </h3>
-                        <div class="stat-item">
-                            <span class="stat-label">Climb Energy</span>
-                            <span class="stat-value" id="climb-energy">0.40 MWh</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Cruise Energy</span>
-                            <span class="stat-value" id="cruise-energy">0.00 MWh</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Total Mission Energy</span>
-                            <span class="stat-value" id="total-energy">0.00 MWh</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Mass Budget Card -->
-                    <div class="glass-card data-card">
-                        <h3 class="card-title">
-                            <span class="card-icon">⚖️</span>
-                            Mass Budget
-                        </h3>
-                        <div class="stat-item">
-                            <span class="stat-label">Battery Mass</span>
-                            <span class="stat-value" id="battery-mass">0 kg</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Fuel Mass</span>
-                            <span class="stat-value" id="fuel-mass">0 kg</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Turbine Mass</span>
-                            <span class="stat-value" id="turbine-mass">0 kg</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Total Aircraft Mass</span>
-                            <span class="stat-value" id="total-mass">0 kg</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Performance Metrics Card -->
-                    <div class="glass-card data-card">
-                        <h3 class="card-title">
-                            <span class="card-icon">📈</span>
-                            Performance Metrics
-                        </h3>
-                        <div class="stat-item">
-                            <span class="stat-label">System Energy Density</span>
-                            <span class="stat-value" id="system-density">0 Wh/kg</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Cost per PKM</span>
-                            <span class="stat-value" id="cost-pkm">$0.000</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">CO₂ per PKM</span>
-                            <span class="stat-value" id="co2-pkm">0 g</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Battery Peak Power</span>
-                            <span class="stat-value" id="battery-peak-power">0 MW</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-        
-        <!-- Controls Section -->
-        <div class="controls-section">
-            <div class="controls-grid">
-                <!-- Mission Parameters -->
-                <div class="control-card">
-                    <h4 class="category-header">Mission Parameters</h4>
-                    <div class="control-group">
-                        <label>
-                            Seats
-                            <span class="value-display" id="seats-value">30</span>
-                        </label>
-                        <input type="range" id="seats" min="10" max="50" value="30" step="1">
-                    </div>
-                    <div class="control-group">
-                        <label>
-                            Range (km)
-                            <span class="value-display" id="range-value">1000</span>
-                        </label>
-                        <input type="range" id="range" min="500" max="2000" value="1000" step="50">
-                    </div>
-                    <div class="control-group">
-                        <label>
-                            Cruise Alt (km)
-                            <span class="value-display" id="altitude-value">18.0</span>
-                        </label>
-                        <input type="range" id="altitude" min="10" max="20" value="18" step="0.5">
-                    </div>
+    </div>
+    
+    <!-- Popup Modal -->
+    <div id="popup-modal" class="popup-modal" onclick="closePopup(event)">
+        <div class="popup-content" onclick="event.stopPropagation()">
+            <div class="popup-header">
+                <h2 class="popup-title" id="popup-title">Configuration</h2>
+                <button class="close-btn" onclick="closePopup()">&times;</button>
+            </div>
+            
+            <div class="control-section">
+                <h4 class="category-header">Mission Parameters</h4>
+                <div class="control-group">
+                    <label>
+                        Seats
+                        <span class="value-display" id="seats-value">30</span>
+                    </label>
+                    <input type="range" id="seats" min="10" max="50" value="30" step="1">
                 </div>
-                
-                <!-- Battery Specifications -->
-                <div class="control-card">
-                    <h4 class="category-header">Battery Specs</h4>
-                    <div class="control-group">
-                        <label>
-                            Energy (Wh/kg)
-                            <span class="value-display" id="battery-density-value">600</span>
-                        </label>
-                        <input type="range" id="battery-density" min="400" max="800" value="600" step="20">
-                    </div>
-                    <div class="control-group">
-                        <label>
-                            Power (W/kg)
-                            <span class="value-display" id="battery-power-value">1500</span>
-                        </label>
-                        <input type="range" id="battery-power" min="1000" max="3000" value="1500" step="100">
-                    </div>
-                    <div class="control-group">
-                        <label>
-                            Battery Share (%)
-                            <span class="value-display" id="battery-share-value">70</span>
-                        </label>
-                        <input type="range" id="battery-share" min="50" max="90" value="70" step="5">
-                    </div>
+                <div class="control-group">
+                    <label>
+                        Range (km)
+                        <span class="value-display" id="range-value">1000</span>
+                    </label>
+                    <input type="range" id="range" min="500" max="2000" value="1000" step="50">
                 </div>
-                
-                <!-- Aircraft Parameters -->
-                <div class="control-card">
-                    <h4 class="category-header">Aircraft Params</h4>
-                    <div class="control-group">
-                        <label>
-                            L/D Ratio
-                            <span class="value-display" id="ld-ratio-value">18</span>
-                        </label>
-                        <input type="range" id="ld-ratio" min="15" max="22" value="18" step="0.5">
-                    </div>
-                    <div class="control-group">
-                        <label>
-                            Turbine Eff (%)
-                            <span class="value-display" id="turbine-eff-value">38</span>
-                        </label>
-                        <input type="range" id="turbine-eff" min="30" max="45" value="38" step="1">
-                    </div>
+                <div class="control-group">
+                    <label>
+                        Cruise Alt (km)
+                        <span class="value-display" id="altitude-value">18.0</span>
+                    </label>
+                    <input type="range" id="altitude" min="10" max="20" value="18" step="0.5">
                 </div>
-                
-                <!-- Save Button -->
-                <div class="control-card">
-                    <h4 class="category-header">Actions</h4>
-                    <button class="save-config-btn" onclick="saveCurrentConfiguration()">Save Configuration</button>
+            </div>
+            
+            <div class="control-section">
+                <h4 class="category-header">Battery Specs</h4>
+                <div class="control-group">
+                    <label>
+                        Energy (Wh/kg)
+                        <span class="value-display" id="battery-density-value">600</span>
+                    </label>
+                    <input type="range" id="battery-density" min="400" max="800" value="600" step="20">
                 </div>
+                <div class="control-group">
+                    <label>
+                        Power (W/kg)
+                        <span class="value-display" id="battery-power-value">1500</span>
+                    </label>
+                    <input type="range" id="battery-power" min="1000" max="3000" value="1500" step="100">
+                </div>
+                <div class="control-group">
+                    <label>
+                        Battery Share (%)
+                        <span class="value-display" id="battery-share-value">70</span>
+                    </label>
+                    <input type="range" id="battery-share" min="50" max="90" value="70" step="5">
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h4 class="category-header">Aircraft Params</h4>
+                <div class="control-group">
+                    <label>
+                        L/D Ratio
+                        <span class="value-display" id="ld-ratio-value">18</span>
+                    </label>
+                    <input type="range" id="ld-ratio" min="15" max="22" value="18" step="0.5">
+                </div>
+                <div class="control-group">
+                    <label>
+                        Turbine Eff (%)
+                        <span class="value-display" id="turbine-eff-value">38</span>
+                    </label>
+                    <input type="range" id="turbine-eff" min="30" max="45" value="38" step="1">
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h4 class="category-header">Actions</h4>
+                <button class="save-config-btn" onclick="saveCurrentConfiguration()">Save Configuration</button>
             </div>
         </div>
     </div>
@@ -811,15 +1013,126 @@
         const MAINTENANCE_FACTOR = 1.5;
         const CO2_PER_KG_FUEL = 3.16; // kg CO₂ per kg Jet-A
         
-        // Application State (in-memory storage)
+        // Application State
         let aircraftModels = [];
         let currentAircraftId = null;
         let massChart = null;
+        let currentPopupType = null;
+        let currentConfigId = null;
+        
+        // Chart configurations
+        let chartConfigs = {
+            1: {
+                name: 'Concorde High-Speed',
+                active: true,
+                color: '#00d862',
+                parameters: {
+                    seats: 30,
+                    range: 1000,
+                    altitude: 18,
+                    batteryDensity: 600,
+                    batteryPower: 1500,
+                    batteryShare: 70,
+                    ldRatio: 18,
+                    turbineEff: 38
+                }
+            },
+            2: {
+                name: 'Ampaire',
+                active: false,
+                color: '#00d4ff',
+                parameters: {
+                    seats: 25,
+                    range: 800,
+                    altitude: 15,
+                    batteryDensity: 550,
+                    batteryPower: 1400,
+                    batteryShare: 60,
+                    ldRatio: 17,
+                    turbineEff: 36
+                }
+            }
+        };
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             showDashboard();
         });
+        
+        // Toggle chart line visibility
+        function toggleChartLine(configId) {
+            const toggle = document.querySelector(`#control-${configId} .toggle-switch`);
+            const card = document.getElementById(`control-${configId}`);
+            
+            chartConfigs[configId].active = !chartConfigs[configId].active;
+            
+            if (chartConfigs[configId].active) {
+                toggle.classList.add('active');
+                card.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+                card.classList.remove('active');
+            }
+            
+            updateChart();
+        }
+        
+        // Update configuration name
+        function updateConfigName(configId) {
+            const nameInput = document.getElementById(`config-name-${configId}`);
+            chartConfigs[configId].name = nameInput.value;
+            updateChart();
+        }
+        
+        // Open popup for specific configuration
+        function openPopupForConfig(configId) {
+            currentConfigId = configId;
+            const config = chartConfigs[configId];
+            const title = document.getElementById('popup-title');
+            
+            title.textContent = config.name + ' Configuration';
+            
+            // Load configuration values
+            document.getElementById('seats').value = config.parameters.seats;
+            document.getElementById('range').value = config.parameters.range;
+            document.getElementById('altitude').value = config.parameters.altitude;
+            document.getElementById('battery-density').value = config.parameters.batteryDensity;
+            document.getElementById('battery-power').value = config.parameters.batteryPower;
+            document.getElementById('battery-share').value = config.parameters.batteryShare;
+            document.getElementById('ld-ratio').value = config.parameters.ldRatio;
+            document.getElementById('turbine-eff').value = config.parameters.turbineEff;
+            
+            // Update displays
+            updateDisplay('seats-value', config.parameters.seats);
+            updateDisplay('range-value', config.parameters.range);
+            updateDisplay('altitude-value', config.parameters.altitude.toFixed(1));
+            updateDisplay('battery-density-value', config.parameters.batteryDensity);
+            updateDisplay('battery-power-value', config.parameters.batteryPower);
+            updateDisplay('battery-share-value', config.parameters.batteryShare);
+            updateDisplay('ld-ratio-value', config.parameters.ldRatio.toFixed(1));
+            updateDisplay('turbine-eff-value', config.parameters.turbineEff);
+            
+            document.getElementById('popup-modal').style.display = 'block';
+        }
+        
+        // Popup Functions
+        function openPopup(type) {
+            currentPopupType = type;
+            const modal = document.getElementById('popup-modal');
+            const title = document.getElementById('popup-title');
+            
+            if (type === 'aircraft') {
+                title.textContent = 'Aircraft Configuration';
+                currentConfigId = null;
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        function closePopup(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('popup-modal').style.display = 'none';
+        }
         
         // Navigation Functions
         function showDashboard() {
@@ -840,13 +1153,13 @@
             }
             
             calculate();
+            updateControlCards();
         }
         
         function createNewAircraft() {
-            currentAircraftId = Date.now(); // Simple ID generation
+            currentAircraftId = Date.now();
             const aircraftNumber = aircraftModels.length + 1;
             
-            // Reset form to defaults
             document.getElementById('aircraft-name').value = `Aircraft ${aircraftNumber}`;
             document.getElementById('seats').value = 30;
             document.getElementById('range').value = 1000;
@@ -861,11 +1174,10 @@
         }
         
         function saveCurrentConfiguration() {
-            const config = {
-                id: currentAircraftId || Date.now(),
-                name: document.getElementById('aircraft-name').value || 'Unnamed Aircraft',
-                timestamp: new Date().toISOString(),
-                parameters: {
+            if (currentConfigId) {
+                // Save to specific configuration
+                const config = chartConfigs[currentConfigId];
+                config.parameters = {
                     seats: parseInt(document.getElementById('seats').value),
                     range: parseInt(document.getElementById('range').value),
                     altitude: parseFloat(document.getElementById('altitude').value),
@@ -874,19 +1186,37 @@
                     batteryShare: parseInt(document.getElementById('battery-share').value),
                     ldRatio: parseFloat(document.getElementById('ld-ratio').value),
                     turbineEff: parseInt(document.getElementById('turbine-eff').value)
-                },
-                results: getCurrentResults()
-            };
-            
-            // Update or add configuration
-            const existingIndex = aircraftModels.findIndex(m => m.id === config.id);
-            if (existingIndex >= 0) {
-                aircraftModels[existingIndex] = config;
+                };
+                
+                updateControlCards();
+                updateChart();
             } else {
-                aircraftModels.push(config);
+                // Save main configuration
+                const config = {
+                    id: currentAircraftId || Date.now(),
+                    name: document.getElementById('aircraft-name').value || 'Unnamed Aircraft',
+                    timestamp: new Date().toISOString(),
+                    parameters: {
+                        seats: parseInt(document.getElementById('seats').value),
+                        range: parseInt(document.getElementById('range').value),
+                        altitude: parseFloat(document.getElementById('altitude').value),
+                        batteryDensity: parseInt(document.getElementById('battery-density').value),
+                        batteryPower: parseInt(document.getElementById('battery-power').value),
+                        batteryShare: parseInt(document.getElementById('battery-share').value),
+                        ldRatio: parseFloat(document.getElementById('ld-ratio').value),
+                        turbineEff: parseInt(document.getElementById('turbine-eff').value)
+                    },
+                    results: getCurrentResults()
+                };
+                
+                const existingIndex = aircraftModels.findIndex(m => m.id === config.id);
+                if (existingIndex >= 0) {
+                    aircraftModels[existingIndex] = config;
+                } else {
+                    aircraftModels.push(config);
+                }
             }
             
-            // Show confirmation
             const saveBtn = document.querySelector('.save-config-btn');
             const originalText = saveBtn.textContent;
             saveBtn.textContent = '✓ Saved!';
@@ -894,7 +1224,8 @@
             setTimeout(() => {
                 saveBtn.textContent = originalText;
                 saveBtn.style.background = '#00d862';
-            }, 2000);
+                closePopup();
+            }, 1500);
         }
         
         function loadAircraft(id) {
@@ -903,7 +1234,6 @@
             
             currentAircraftId = id;
             
-            // Load parameters
             document.getElementById('aircraft-name').value = aircraft.name;
             document.getElementById('seats').value = aircraft.parameters.seats;
             document.getElementById('range').value = aircraft.parameters.range;
@@ -914,7 +1244,6 @@
             document.getElementById('ld-ratio').value = aircraft.parameters.ldRatio;
             document.getElementById('turbine-eff').value = aircraft.parameters.turbineEff;
             
-            // Update all value displays
             updateDisplay('seats-value', aircraft.parameters.seats);
             updateDisplay('range-value', aircraft.parameters.range);
             updateDisplay('altitude-value', aircraft.parameters.altitude.toFixed(1));
@@ -967,6 +1296,53 @@
             }
         }
         
+        // Update control cards with calculated values
+        function updateControlCards() {
+            Object.keys(chartConfigs).forEach(configId => {
+                const config = chartConfigs[configId];
+                const params = config.parameters;
+                
+                // Calculate values for this configuration
+                const results = calculateForConfig(params);
+                
+                document.getElementById(`share-${configId}`).textContent = params.batteryShare + '%';
+                document.getElementById(`mass-${configId}`).textContent = Math.round(results.totalMass).toLocaleString() + ' kg';
+                document.getElementById(`density-${configId}`).textContent = Math.round(results.systemDensity) + ' Wh/kg';
+            });
+        }
+        
+        // Calculate values for a specific configuration
+        function calculateForConfig(params) {
+            const cruise_alt_m = params.altitude * 1000;
+            const climb_energy_mwh = 0.4;
+            
+            const total_mass_estimate = AIRFRAME_MASS + PAYLOAD_MASS;
+            const cruise_energy_j = (total_mass_estimate * GRAVITY * params.range * 1000) / params.ldRatio;
+            const cruise_energy_mwh = cruise_energy_j / (3.6e9);
+            
+            const total_mission_energy_mwh = climb_energy_mwh + cruise_energy_mwh;
+            
+            const battery_energy_mwh = total_mission_energy_mwh * (params.batteryShare / 100);
+            const fuel_energy_mwh = total_mission_energy_mwh * (1 - params.batteryShare / 100);
+            
+            const usable_wh_per_kg = params.batteryDensity * (1 - PACK_LOSS_FRACTION);
+            const battery_mass_kg = (battery_energy_mwh * 1e6) / usable_wh_per_kg;
+            const fuel_mass_kg = (fuel_energy_mwh * 1e6) / (FUEL_ENERGY_DENSITY * (params.turbineEff / 100));
+            const turbine_mass_kg = 0.15 * fuel_mass_kg;
+            
+            const total_propulsion_mass_kg = battery_mass_kg + fuel_mass_kg + turbine_mass_kg;
+            const total_mass_kg = AIRFRAME_MASS + PAYLOAD_MASS + total_propulsion_mass_kg;
+            
+            const system_wh_per_kg = (total_mission_energy_mwh * 1e6) / total_propulsion_mass_kg;
+            
+            return {
+                totalMass: total_mass_kg,
+                systemDensity: system_wh_per_kg,
+                batteryMass: battery_mass_kg,
+                fuelMass: fuel_mass_kg
+            };
+        }
+        
         // Chart initialization
         function initializeChart() {
             const ctx = document.getElementById('massChart').getContext('2d');
@@ -974,47 +1350,7 @@
                 type: 'line',
                 data: {
                     labels: [],
-                    datasets: [
-                        {
-                            label: 'Total Aircraft Mass',
-                            data: [],
-                            borderColor: '#00d862',
-                            backgroundColor: 'rgba(0, 216, 98, 0.1)',
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            pointBackgroundColor: '#00d862',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Battery Mass',
-                            data: [],
-                            borderColor: '#00d4ff',
-                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            pointBackgroundColor: '#00d4ff',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Fuel Mass',
-                            data: [],
-                            borderColor: '#ff6b6b',
-                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            pointBackgroundColor: '#ff6b6b',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            borderWidth: 2
-                        }
-                    ]
+                    datasets: []
                 },
                 options: {
                     responsive: true,
@@ -1024,9 +1360,9 @@
                             position: 'bottom',
                             labels: {
                                 color: '#333',
-                                padding: 10,
+                                padding: 15,
                                 font: {
-                                    size: 11
+                                    size: 12
                                 },
                                 usePointStyle: true
                             }
@@ -1038,7 +1374,7 @@
                             borderColor: 'rgba(0, 216, 98, 0.2)',
                             borderWidth: 1,
                             cornerRadius: 8,
-                            padding: 10,
+                            padding: 12,
                             displayColors: true
                         }
                     },
@@ -1049,15 +1385,12 @@
                                 text: 'Battery Share (%)',
                                 color: '#666',
                                 font: {
-                                    size: 11,
+                                    size: 12,
                                     weight: '500'
                                 }
                             },
                             ticks: {
-                                color: '#666',
-                                font: {
-                                    size: 10
-                                }
+                                color: '#666'
                             },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.05)',
@@ -1070,7 +1403,7 @@
                                 text: 'Mass (kg)',
                                 color: '#666',
                                 font: {
-                                    size: 11,
+                                    size: 12,
                                     weight: '500'
                                 }
                             },
@@ -1078,9 +1411,6 @@
                                 color: '#666',
                                 callback: function(value) {
                                     return value.toLocaleString();
-                                },
-                                font: {
-                                    size: 10
                                 }
                             },
                             grid: {
@@ -1105,7 +1435,6 @@
         
         // Main calculation function
         function calculate() {
-            // Get inputs
             const seats = parseInt(document.getElementById('seats').value);
             const range_km = parseInt(document.getElementById('range').value);
             const cruise_alt_km = parseFloat(document.getElementById('altitude').value);
@@ -1117,24 +1446,19 @@
             
             const cruise_alt_m = cruise_alt_km * 1000;
             
-            // Atmosphere calculation
             const rho_h = atmosphereDensity(cruise_alt_m);
             
-            // Energy calculations
-            const climb_energy_mwh = 0.4; // Fixed for 18km climb
+            const climb_energy_mwh = 0.4;
             
-            // Simplified cruise energy calculation
             const total_mass_estimate = AIRFRAME_MASS + PAYLOAD_MASS;
             const cruise_energy_j = (total_mass_estimate * GRAVITY * range_km * 1000) / ld_ratio;
-            const cruise_energy_mwh = cruise_energy_j / (3.6e9); // J to MWh
+            const cruise_energy_mwh = cruise_energy_j / (3.6e9);
             
             const total_mission_energy_mwh = climb_energy_mwh + cruise_energy_mwh;
             
-            // Energy split
             const battery_energy_mwh = total_mission_energy_mwh * batt_share;
             const fuel_energy_mwh = total_mission_energy_mwh * (1 - batt_share);
             
-            // Mass calculations
             const usable_wh_per_kg = battery_wh_per_kg * (1 - PACK_LOSS_FRACTION);
             const battery_mass_kg = (battery_energy_mwh * 1e6) / usable_wh_per_kg;
             const fuel_mass_kg = (fuel_energy_mwh * 1e6) / (FUEL_ENERGY_DENSITY * turbine_efficiency);
@@ -1143,24 +1467,19 @@
             const total_propulsion_mass_kg = battery_mass_kg + fuel_mass_kg + turbine_mass_kg;
             const total_mass_kg = AIRFRAME_MASS + PAYLOAD_MASS + total_propulsion_mass_kg;
             
-            // System energy density
             const system_wh_per_kg = (total_mission_energy_mwh * 1e6) / total_propulsion_mass_kg;
             
-            // Climb feasibility
             const battery_peak_power_w = battery_mass_kg * battery_power_w_per_kg;
             const climb_feasible = battery_peak_power_w >= CLIMB_POWER_REQ;
             
-            // Cost calculations
             const battery_cost = battery_energy_mwh * 1e3 * ELECTRICITY_COST;
             const fuel_cost = fuel_mass_kg * FUEL_COST;
             const total_energy_cost = (battery_cost + fuel_cost) * MAINTENANCE_FACTOR;
             const cost_per_pkm = total_energy_cost / (seats * range_km);
             
-            // Emissions
             const total_co2 = fuel_mass_kg * CO2_PER_KG_FUEL;
             const co2_per_pkm = (total_co2 / (seats * range_km)) * 1000;
             
-            // Update display
             updateDisplay('climb-energy', climb_energy_mwh.toFixed(2) + ' MWh');
             updateDisplay('cruise-energy', cruise_energy_mwh.toFixed(2) + ' MWh');
             updateDisplay('total-energy', total_mission_energy_mwh.toFixed(2) + ' MWh');
@@ -1173,7 +1492,6 @@
             updateDisplay('co2-pkm', Math.round(co2_per_pkm) + ' g');
             updateDisplay('battery-peak-power', (battery_peak_power_w / 1e6).toFixed(1) + ' MW');
             
-            // Update status
             const statusBadge = document.getElementById('status-badge');
             if (climb_feasible) {
                 statusBadge.textContent = '✓ CLIMB FEASIBLE';
@@ -1183,7 +1501,6 @@
                 statusBadge.className = 'status-badge infeasible';
             }
             
-            // Update chart
             updateChart();
         }
         
@@ -1191,49 +1508,70 @@
         function updateChart() {
             if (!massChart) return;
             
-            const range_km = parseInt(document.getElementById('range').value);
-            const battery_wh_per_kg = parseInt(document.getElementById('battery-density').value);
-            const ld_ratio = parseFloat(document.getElementById('ld-ratio').value);
-            const turbine_efficiency = parseInt(document.getElementById('turbine-eff').value) / 100;
-            
+            const datasets = [];
             const shares = [];
-            const totalMasses = [];
-            const batteryMasses = [];
-            const fuelMasses = [];
             
-            // Calculate for different battery shares
+            // Generate share points
             for (let share = 50; share <= 90; share += 5) {
                 shares.push(share);
-                
-                const batt_share = share / 100;
-                
-                // Recalculate for this share
-                const total_mass_estimate = AIRFRAME_MASS + PAYLOAD_MASS;
-                const cruise_energy_j = (total_mass_estimate * GRAVITY * range_km * 1000) / ld_ratio;
-                const cruise_energy_mwh = cruise_energy_j / (3.6e9);
-                const total_mission_energy_mwh = 0.4 + cruise_energy_mwh;
-                
-                const battery_energy_mwh = total_mission_energy_mwh * batt_share;
-                const fuel_energy_mwh = total_mission_energy_mwh * (1 - batt_share);
-                
-                const usable_wh_per_kg = battery_wh_per_kg * (1 - PACK_LOSS_FRACTION);
-                const battery_mass_kg = (battery_energy_mwh * 1e6) / usable_wh_per_kg;
-                const fuel_mass_kg = (fuel_energy_mwh * 1e6) / (FUEL_ENERGY_DENSITY * turbine_efficiency);
-                const turbine_mass_kg = 0.15 * fuel_mass_kg;
-                
-                const total_propulsion_mass_kg = battery_mass_kg + fuel_mass_kg + turbine_mass_kg;
-                const total_mass_kg = AIRFRAME_MASS + PAYLOAD_MASS + total_propulsion_mass_kg;
-                
-                totalMasses.push(total_mass_kg);
-                batteryMasses.push(battery_mass_kg);
-                fuelMasses.push(fuel_mass_kg);
             }
             
-            // Update chart data
+            // Add datasets for each active configuration
+            Object.keys(chartConfigs).forEach(configId => {
+                const config = chartConfigs[configId];
+                if (!config.active) return;
+                
+                const totalMasses = [];
+                const batteryMasses = [];
+                const fuelMasses = [];
+                
+                shares.forEach(share => {
+                    const params = {...config.parameters, batteryShare: share};
+                    const results = calculateForConfig(params);
+                    
+                    totalMasses.push(results.totalMass);
+                    batteryMasses.push(results.batteryMass);
+                    fuelMasses.push(results.fuelMass);
+                });
+                
+                datasets.push({
+                    label: config.name + ' - Total Mass',
+                    data: totalMasses,
+                    borderColor: config.color,
+                    backgroundColor: config.color.replace(')', ', 0.1)').replace('rgb', 'rgba'),
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2
+                });
+                
+                datasets.push({
+                    label: config.name + ' - Battery Mass',
+                    data: batteryMasses,
+                    borderColor: config.color,
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderWidth: 1.5
+                });
+                
+                datasets.push({
+                    label: config.name + ' - Fuel Mass',
+                    data: fuelMasses,
+                    borderColor: config.color,
+                    backgroundColor: 'transparent',
+                    borderDash: [2, 2],
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderWidth: 1.5
+                });
+            });
+            
             massChart.data.labels = shares;
-            massChart.data.datasets[0].data = totalMasses;
-            massChart.data.datasets[1].data = batteryMasses;
-            massChart.data.datasets[2].data = fuelMasses;
+            massChart.data.datasets = datasets;
             massChart.update();
         }
         
